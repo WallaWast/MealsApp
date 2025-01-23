@@ -28,6 +28,21 @@ const MealDetailScreen = ({ route, navigation }) => {
 
 	const mealIsFavorite = favoriteMealIds.includes(mealId);
 
+	function sendPushNotification() {
+		fetch('https://exp.host/--/api/v2/push/send', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				to: 'ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]', // Change with the corrent push token
+				title: `Reminder of ${selectedMeal.title}`,
+				body: `Don't forget to prepare your ${selectedMeal.title} meal!`,
+				data: { mealId: mealId },
+			}),
+		});
+	}
+
 	function scheduleNotificationHandler() {
 		//console.log('Schedule');
 		Notifications.scheduleNotificationAsync({
@@ -79,6 +94,7 @@ const MealDetailScreen = ({ route, navigation }) => {
 	return (
 		<ScrollView style={styles.rootContainer}>
 			<Button title='Schedule Notification' onPress={scheduleNotificationHandler} />
+			<Button title='Send Push Notification' onPress={sendPushNotification} />
 			<Image source={{ uri: selectedMeal.imageUrl }} style={styles.image} />
 			<Text style={styles.title}>{selectedMeal.title}</Text>
 			<MealDetails

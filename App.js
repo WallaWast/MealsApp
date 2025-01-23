@@ -1,4 +1,4 @@
-import { StyleSheet, SafeAreaView, Text, Button } from 'react-native';
+import { StyleSheet, SafeAreaView, Text, Button, Alert, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -57,6 +57,35 @@ function DrawerNavigator() {
 }
 
 export default function App() {
+	useEffect(() => {
+		async function configurePushNotifications() {
+			const { status } = await Notifications.getPermissionsAsync();
+			let finalStatus = status;
+
+			if (finalStatus !== 'granted') {
+				const { status } = await Notifications.requestPermissionsAsync();
+				finalStatus = status;
+			}
+
+			if (finalStatus !== 'granted') {
+				Alert.alert('Permission Required', 'Push notifications need appropriate permissions to work.');
+				return;
+			}
+
+			const token = await Notifications.getExpoPushTokenAsync();
+			console.log(token);
+
+			if (Platform.OS === 'android') {
+				Notifications.setNotificationChannelAsync('default', {
+					name: 'default',
+					importance: Notifications.AndroidImportance.DEFAULT,
+				});
+			}
+		}
+
+		configurePushNotifications();
+	}, []);
+
 	useEffect(() => {
 		const subscription1 = Notifications.addNotificationReceivedListener((notification) => {
 			console.log(notification);
