@@ -1,5 +1,5 @@
-import { View, Image, Text, StyleSheet, ScrollView } from 'react-native';
-import { useLayoutEffect } from 'react';
+import { View, Image, Text, StyleSheet, ScrollView, Button } from 'react-native';
+import { useEffect, useLayoutEffect } from 'react';
 import { MEALS } from '../data/dummy-data';
 import MealDetails from '../components/MealDetails';
 import Subtitle from '../components/Subtitle';
@@ -8,6 +8,15 @@ import IconButton from '../components/IconButton';
 import { useDispatch, useSelector } from 'react-redux';
 // import { FavoritesContext } from '../store/context/favorites-context';
 import { addFavorite, removeFavorite } from '../store/redux/favorites';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: false,
+		shouldSetBadge: false,
+	}),
+});
 
 const MealDetailScreen = ({ route, navigation }) => {
 	// const favoriteMealsCtx = useContext(FavoritesContext);
@@ -19,6 +28,20 @@ const MealDetailScreen = ({ route, navigation }) => {
 
 	const mealIsFavorite = favoriteMealIds.includes(mealId);
 
+	function scheduleNotificationHandler() {
+		//console.log('Schedule');
+		Notifications.scheduleNotificationAsync({
+			content: {
+				title: `Reminder of ${selectedMeal.title}`,
+				body: `Don't forget to prepare your ${selectedMeal.title} meal!`,
+				data: { mealId: mealId },
+			},
+			trigger: {
+				seconds: 5,
+			},
+		});
+	}
+
 	function changeFavoriteStatusHandler() {
 		if (mealIsFavorite) {
 			// favoriteMealsCtx.removeFavorite(mealId);
@@ -28,6 +51,15 @@ const MealDetailScreen = ({ route, navigation }) => {
 			dispatch(addFavorite({ id: mealId }));
 		}
 	}
+
+	useEffect(() => {
+		(async () => {
+			const { status } = await Notifications.requestPermissionsAsync();
+			if (status !== 'granted') {
+				alert('Permission to show notifications has not been granted.');
+			}
+		})();
+	}, []);
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -46,6 +78,7 @@ const MealDetailScreen = ({ route, navigation }) => {
 
 	return (
 		<ScrollView style={styles.rootContainer}>
+			<Button title='Schedule Notification' onPress={scheduleNotificationHandler} />
 			<Image source={{ uri: selectedMeal.imageUrl }} style={styles.image} />
 			<Text style={styles.title}>{selectedMeal.title}</Text>
 			<MealDetails

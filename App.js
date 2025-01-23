@@ -11,7 +11,9 @@ import MealsOverviewScreen from './screens/MealsOverviewScreen';
 import MealDetailScreen from './screens/MealDetailScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
 import { store } from './store/redux/store';
-// import FavoritesContextProvider from './store/context/favorites-context';
+import { useEffect } from 'react';
+
+import * as Notifications from 'expo-notifications';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -55,6 +57,21 @@ function DrawerNavigator() {
 }
 
 export default function App() {
+	useEffect(() => {
+		const subscription1 = Notifications.addNotificationReceivedListener((notification) => {
+			console.log(notification);
+			console.log(notification.request.content.data);
+		});
+		const subscription2 = Notifications.addNotificationResponseReceivedListener((response) => {
+			console.log('Notification Response: ', response);
+			console.log(response.notification.request.content.data);
+		});
+		return () => {
+			subscription1.remove();
+			subscription2.remove();
+		};
+	}, []);
+
 	return (
 		<>
 			<SafeAreaView style={styles.safeArea}>

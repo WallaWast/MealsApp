@@ -1,37 +1,48 @@
 {
-  "expo": {
-    "name": "Meals App",
-    "slug": "meals-app",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "backgroundColor": "#24180f",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "buildNumber": "1.0.0",
-      "supportsTablet": true
-    },
-    "android": {
-      "versionCode": 1,
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.wastoo.mealsapp"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "96199bf4-222d-4479-ae10-c2830f06fd46"
-      }
-    }
-  }
+	"expo": {
+		"name": "Meals App",
+		"slug": "meals-app",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"backgroundColor": "#24180f",
+		"userInterfaceStyle": "light",
+		"newArchEnabled": true,
+		"splash": {
+			"image": "./assets/splash-icon.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"ios": {
+			"buildNumber": "1.0.0",
+			"supportsTablet": true
+		},
+		"android": {
+			"versionCode": 1,
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#ffffff"
+			},
+			"package": "com.wastoo.mealsapp"
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "96199bf4-222d-4479-ae10-c2830f06fd46"
+			}
+		},
+		"plugins": [
+			[
+				"expo-notifications",
+				{
+					"icon": "./assets/icon.png",
+					"color": "#ffffff",
+					"defaultChannel": "default",
+					"enableBackgroundRemoteNotifications": false
+				}
+			]
+		]
+	}
 }
